@@ -10,4 +10,4 @@ This paper is currently under review. For questions about the code, please:
 
 - Open an issue on GitHub
 
-- Email: lijiayi03531@gmail.com and yixuan000518@gmail.com
+- Propose an issue through emails: lijiayi03531@gmail.com and yixuan000518@gmail.com
