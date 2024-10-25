@@ -70,7 +70,7 @@ def train2(model, train_loader, optimizer, epochs=1):
     return model, loss, recon_loss
 
 
-def adaptive_stage(model, data, optimizerD, optimizerE, step=10, max_iter=5, alpha=20, beta=1, true_beta=None):
+def refinement_stage(model, data, optimizerD, optimizerE, step=10, max_iter=5, alpha=20, beta=1, true_beta=None):
     # 核心的目的 是要提高signature的同时 保持cell prop稳定
     data = torch.as_tensor(data, dtype=torch.float32, device=device)
     if true_beta is not None:
@@ -184,7 +184,7 @@ def predict(test_x, genename, celltypes, samplename,
                 encoder_parameters = [{'params': [p for n, p in model.named_parameters() if 'encoder' in n]}]
                 optimizerD = torch.optim.Adam(decoder_parameters, lr=1e-4)
                 optimizerE = torch.optim.Adam(encoder_parameters, lr=1e-4)
-                test_sigm, loss, test_pred = adaptive_stage(model, x, optimizerD, optimizerE, step=300, max_iter=3, alpha=alpha, beta=beta, true_beta=true_beta)
+                test_sigm, loss, test_pred = refinement_stage(model, x, optimizerD, optimizerE, step=300, max_iter=3, alpha=alpha, beta=beta, true_beta=true_beta)
                 # print('TestPred',TestPred.shape,'test_pred',test_pred.shape,'TestPred[i,:]',TestPred[i,:].shape)
                 TestPred[i, :] = test_pred
                 # print('test_sigm',test_sigm.shape,'TestSigmList',TestSigmList.shape,'TestSigmList[i, :, :,:]',TestSigmList[i, :, :,:].shape)
@@ -211,7 +211,7 @@ def predict(test_x, genename, celltypes, samplename,
             optimizerD = torch.optim.Adam(decoder_parameters, lr=1e-4)
             optimizerE = torch.optim.Adam(encoder_parameters, lr=1e-4)
             print('Start adaptive training for all the samples')
-            test_sigm, loss, test_pred = adaptive_stage(model, test_x, optimizerD, optimizerE, step=300, max_iter=3, alpha=alpha, beta=beta, true_beta=true_beta)
+            test_sigm, loss, test_pred = refinement_stage(model, test_x, optimizerD, optimizerE, step=300, max_iter=3, alpha=alpha, beta=beta, true_beta=true_beta)
             showloss(loss, outdir + '/overall_adap_loss.png')
             print('Adaptive stage is done')
             # test_pred = pd.DataFrame(test_pred,columns=celltypes,index=samplename)
