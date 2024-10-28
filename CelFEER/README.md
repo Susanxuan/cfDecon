@@ -1,5 +1,5 @@
 # CelFEER
-This code is sourced directly from the celFEER project. For more details, please visit their GitHub repository: [celFEER](https://github.com/pi-zz-a/CelFEER/tree/main).
+**This code is sourced directly from the celFEER project. For more details, please visit their GitHub repository: [celFEER](https://github.com/pi-zz-a/CelFEER/tree/main).**
 ## Overview
 Adaptation of CelFiE by [Caggiano et al. (2021)](https://www.nature.com/articles/s41467-021-22901-x).
 The code for CelFiE can be found [here](https://github.com/christacaggiano/celfie).  
