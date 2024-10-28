@@ -348,7 +348,7 @@ def main():
             # l1, ccc = score(new_alpha_est, proportions.cpu().detach().numpy())
             # print("l1, ", l1, "ccc", ccc)
 
-            # 计算整体 Pearson 相关性
+            # calculate overall Pearson correlation
             overall_alpha_corr, overall_alpha_p = pearsonr(alpha_est.flatten(), alpha_true.flatten())
             overall_beta_corr, overall_beta_p = pearsonr(beta_est.flatten(), beta_truth.flatten())
 

@@ -40,7 +40,7 @@ def train(model, train_loader, optimizer, epochs=1):
     return model, loss, recon_loss
 
 
-# 分阶段训练
+# sequential training
 def train2(model, train_loader, optimizer, epochs=1):
     # two stage training
     model.train()
@@ -71,7 +71,6 @@ def train2(model, train_loader, optimizer, epochs=1):
 
 
 def refinement_stage(model, data, optimizerD, optimizerE, step=10, max_iter=5, alpha=20, beta=1, true_beta=None):
-    # 核心的目的 是要提高signature的同时 保持cell prop稳定
     data = torch.as_tensor(data, dtype=torch.float32, device=device)
     if true_beta is not None:
         true_beta = torch.as_tensor(true_beta, dtype=torch.float32, device=device)
@@ -132,7 +131,7 @@ def set_requires_grad(module, requires_grad):
 #
 #     for k in range(max_iter):
 #         model.train()
-#         # 训练 decoder
+#         # train decoder
 #         # set_requires_grad(model.decoder, True)
 #         # set_requires_grad(model.encoder, False)
 #         for i in range(step):
@@ -144,7 +143,7 @@ def set_requires_grad(module, requires_grad):
 #             optimizerD.step()
 #             loss.append(F.l1_loss(x_recon, data).cpu().detach().numpy())
 #
-#         # 训练 encoder
+#         # train encoder
 #         # set_requires_grad(model.decoder, False)
 #         # set_requires_grad(model.encoder, True)
 #         for i in range(step):

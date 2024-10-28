@@ -169,12 +169,12 @@ def main():
         bed_file_path = f'./results/heatmaps/{input_path1}_{input_path2}_{fix}{alpha}{beta}_significant_top_50_cpgs1.bed'
         cpg_indices, cpg_labels = get_cpg_indices_and_labels(bed_file_path)
 
-        # 提取指定 CpG 的 beta_est 数据
+        # select CpG beta_est 
         selected_cpgs1 = beta_est_sum1[cpg_indices]  #
         selected_cpgs2 = beta_est_sum2[cpg_indices]  # CTR
         all_relative_values = []
         for channel in range(5):
-            # 计算 CTR 和 HOT 的均值
+            # calculate the average of CTR and HOT 
             hot_mean = selected_cpgs1[:, channel]
             ctr_mean = selected_cpgs2[:, channel]
 
@@ -183,18 +183,18 @@ def main():
             for i in range(len(cpg_labels)):
                 if ctr_mean[i] != 0:
                     relative_change = (hot_mean[i] - ctr_mean[i]) / ctr_mean[i]
-                    relative_values.append(abs(relative_change))  # 取绝对值
+                    relative_values.append(abs(relative_change))  # absolute
                 else:
-                    relative_values.append(np.nan)  # 如果 CTR 为 0，设置为 NaN
+                    relative_values.append(np.nan)  # if CTR = 0, set to NaN
 
-            all_relative_values.append(relative_values)  # 存储每个通道的相对变化率
+            all_relative_values.append(relative_values)  # save the relative difference of all channels
 
             relative_df = pd.DataFrame({
                 'CpG Site': cpg_labels,
                 'Relative Change': relative_values
             })
 
-            # 绘制柱状图
+            # plot bar plot
             plt.figure(figsize=(10, 6))
             sns.barplot(x='CpG Site', y='Relative Change', data=relative_df, palette='coolwarm')
             plt.title(f'Absolute Relative Change for Channel {channel + 1}')

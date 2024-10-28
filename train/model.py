@@ -51,20 +51,20 @@ class new_combine_encoder(nn.Module):
     def __init__(self, input_dim, output_dim, r=[32, 24, 16, 12], use_layernorm=False):
         super(new_combine_encoder, self).__init__()
         self.r = r
-        self.use_layernorm = use_layernorm  # 控制是否使用 LayerNorm 的开关
-        self.weights = nn.ParameterList()  # 用于存储所有权重参数
-        self.weights.append(nn.Parameter(torch.Tensor(5, input_dim, self.r[0])))  # 第一个权重参数
+        self.use_layernorm = use_layernorm  # setting for LayerNorm
+        self.weights = nn.ParameterList()  # setting for weight saving
+        self.weights.append(nn.Parameter(torch.Tensor(5, input_dim, self.r[0])))  # first weight
 
         for i in range(1, len(self.r)):
-            self.weights.append(nn.Parameter(torch.Tensor(5, self.r[i - 1], self.r[i])))  # 动态添加权重参数
+            self.weights.append(nn.Parameter(torch.Tensor(5, self.r[i - 1], self.r[i])))  # dynamic weight addition
 
-        self.weights.append(nn.Parameter(torch.Tensor(5, self.r[-1], output_dim)))  # 最后一个权重参数
+        self.weights.append(nn.Parameter(torch.Tensor(5, self.r[-1], output_dim)))  # last weight
 
         self.output_dim = output_dim
-        self.leakyrelu_layers = nn.ModuleList([nn.LeakyReLU() for _ in range(len(self.r) + 1)])  # 动态创建LeakyReLU层
+        self.leakyrelu_layers = nn.ModuleList([nn.LeakyReLU() for _ in range(len(self.r) + 1)])  # LeakyReLU
 
         if self.use_layernorm:
-            self.layernorms = nn.ModuleList([nn.LayerNorm(dim) for dim in self.r])  # 动态创建LayerNorm层
+            self.layernorms = nn.ModuleList([nn.LayerNorm(dim) for dim in self.r])  # LayerNorm 
 
         self.gnet = nn.Sequential(
             nn.Linear(5, 5, bias=False),
@@ -109,13 +109,13 @@ class new_combine_decoder(nn.Module):
     def __init__(self, input_dim, output_dim, r=[12, 16, 24, 32]):
         super(new_combine_decoder, self).__init__()
         self.r = r
-        self.weights = nn.ParameterList()  # 用于存储所有权重参数
-        self.weights.append(nn.Parameter(torch.Tensor(5, output_dim, self.r[0])))  # 第一个权重参数
+        self.weights = nn.ParameterList()  # save all weights
+        self.weights.append(nn.Parameter(torch.Tensor(5, output_dim, self.r[0]))) 
 
         for i in range(1, len(self.r)):
-            self.weights.append(nn.Parameter(torch.Tensor(5, self.r[i - 1], self.r[i])))  # 动态添加权重参数
+            self.weights.append(nn.Parameter(torch.Tensor(5, self.r[i - 1], self.r[i])))  
 
-        self.weights.append(nn.Parameter(torch.Tensor(5, self.r[-1], input_dim)))  # 最后一个权重参数
+        self.weights.append(nn.Parameter(torch.Tensor(5, self.r[-1], input_dim)))  
 
         self.output_dim = output_dim
         self.leakyrelu1 = nn.LeakyReLU()
@@ -139,7 +139,7 @@ class new_combine_decoder(nn.Module):
         sigmatrix = self.weights[0]
         for i in range(1, len(self.weights)):
             sigmatrix = torch.matmul(sigmatrix, self.weights[i])
-        return self.leakyrelu1(sigmatrix)  # 只有一层leakyrelu self.leakyrelu1()
+        return self.leakyrelu1(sigmatrix)  # one leakyrelu self.leakyrelu1()
 
     def forward(self, z):
         z = z.unsqueeze(2).expand(-1, -1, 5).permute(2, 0, 1)  # 5 7 9

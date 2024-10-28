@@ -19,8 +19,8 @@ def plot_combined_heatmaps(unhealthy_avg, normal_avg, cell_type, save_path, r1, 
 
     cbar = heatmap.collections[0].colorbar
 
-    cbar.ax.yaxis.set_ticks_position('left')  # 将刻度线放在左侧
-    cbar.ax.set_ylabel('', rotation=270, labelpad=15)  # 如果需要标签，可以在这里添加
+    cbar.ax.yaxis.set_ticks_position('left')  # legend on left
+    cbar.ax.set_ylabel('', rotation=270, labelpad=15)  # if label needed, add here
 
     cbar.ax.tick_params(axis='y', labelsize=10, width=2, length=6)
     for label in cbar.ax.get_yticklabels():
